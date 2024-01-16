@@ -1,18 +1,19 @@
-// import {useState} from 'react'
+import {useState} from 'react'
 import { useEffect } from "react";
 import supabase from "../config/supabse";
-// import { selectAllClients} from "../features/clients/clientSlice";
-// import { useSelector } from 'react-redux';
-import { useGetAllClientsQuery } from "../features/api/apiSlice";
+
 
 const Home = () => {
+  const [fetchError, setFetchError] = useState(null);
+  const [clients, setClients] = useState(null);
 
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const { data: orders , error} = await supabase.from('clients').select('*');
-        console.log('orders:',orders)
-        console.log('error:',error)
+        const { data: clients , error} = await supabase.from('clients').select('*');
+        console.log('clients:', clients)
+        setClients(clients);
+        setFetchError(error);
       } catch (error) {
         console.log(error)
       }
@@ -22,33 +23,27 @@ const Home = () => {
   }, [])
   
 
-  const {
-    data: clients,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-  } = useGetAllClientsQuery();
-  console.log(isSuccess, isError, error, clients)
 
   let content;
-    if(isLoading) {
-        content = <p>Loading...</p>;
-    } else if(isSuccess){
-        // content = allClients.map((client) => {
-        //   return (
-        //     <div key={client.id}>
-        //   <p>{client.email}</p>
-        // </div>
-        //   ) });
-    } else if(isError){
-        content = <p>Failed to fetch</p>;
+    if(fetchError) {
+      setFetchError('Error fetching clients.')
+    } 
+    if(clients){
+        content = clients.map((client) => {
+          return (
+            <div key={client.id}>
+              <p>{client.name}</p>
+              <p>{client.email}</p>
+            </div>
+    ) });
     }
 
   return (
     <div>
       <h1>Home</h1>
-      {content}</div>
+      {clients && content}
+      {fetchError && (<p>{fetchError}</p>)}
+    </div>
 
   )
 }
