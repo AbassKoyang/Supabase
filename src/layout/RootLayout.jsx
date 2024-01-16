@@ -7,12 +7,12 @@ const RootLayout = () => {
             <h1>Supabase</h1>
             <nav>
                 <ul>
-                    <li><NavLink>Home</NavLink></li>
-                    <li><NavLink>Create</NavLink></li>
+                    <li><NavLink to='/'>Home</NavLink></li>
+                    <li><NavLink to='create'>Create</NavLink></li>
                 </ul>
             </nav>
         </header>
-        <main>
+        <main className="page">
             <Outlet />
         </main>
     </section>
