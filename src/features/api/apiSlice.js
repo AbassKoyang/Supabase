@@ -1,4 +1,5 @@
 import { createApi, fakeBaseQuery, } from '@reduxjs/toolkit/query/react';
+import supabase from '../../config/supabse';
 
 export const apiSlice = createApi({
     reducerPath: 'api',
@@ -7,12 +8,12 @@ export const apiSlice = createApi({
     endpoints: (builder) => ({
         getAllClients: builder.query({
             query: async () => {
-                
-            },
-            providesTags: () => [
-                // Used for optimistic updates in the store
-                {type: 'Clients', id: 'ALL'}
-                ]
+                const { data } = await supabase.from('clients').select('*');
+                console.log('Supabase Query Result:', data);
+                return data;
+              },
             }),
     })
 })
+
+export const {useGetAllClientsQuery} = apiSlice;
