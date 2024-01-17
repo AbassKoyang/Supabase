@@ -28,7 +28,7 @@ header nav ul{
   list-style: none;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
 }
 header nav ul li a{
   color: white;

@@ -1,51 +1,40 @@
-import {useState} from 'react'
-import { useEffect } from "react";
-import supabase from "../config/supabse";
 
+import { useSelector, useDispatch } from 'react-redux';
+import { selectAllPosts, selectPostStatus, likePost, updateLikes } from '../features/post/postSlice';
 
 const Home = () => {
-  const [fetchError, setFetchError] = useState(null);
-  const [clients, setClients] = useState(null);
+  const dispatch = useDispatch();
+  const posts = useSelector(selectAllPosts);
+  const status = useSelector(selectPostStatus);
 
-  useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const { data: clients , error} = await supabase.from('clients').select('*');
-        console.log('clients:', clients)
-        setClients(clients);
-        setFetchError(error);
-      } catch (error) {
-        console.log(error)
-      }
-    }
+  const handleLike = (postId, likes) => {
+    // Optimistically update the local state
+    dispatch(likePost({ postId }));
 
-    fetchClients();
-  }, [])
-  
+    // Update the server state (handled by React Query)
+    dispatch(updateLikes({ postId, likes }));
+  };
 
+  if (status === 'loading') {
+    return <p>Loading...</p>;
+  }
 
-  let content;
-    if(fetchError) {
-      setFetchError('Error fetching clients.')
-    } 
-    if(clients){
-        content = clients.map((client) => {
-          return (
-            <div key={client.id}>
-              <p>{client.name}</p>
-              <p>{client.email}</p>
-            </div>
-    ) });
-    }
+  if (status === 'failed') {
+    return <p>Error fetching posts</p>;
+  }
 
   return (
     <div>
-      <h1>Home</h1>
-      {clients && content}
-      {fetchError && (<p>{fetchError}</p>)}
+      {posts.map((post) => (
+        <div key={post.id}>
+          <h2>{post.title}</h2>
+          <p>{post.content}</p>
+          <p>Likes: {post.likes}</p>
+          <button onClick={() => handleLike(post.id, post.likes)}>Like</button>
+        </div>
+      ))}
     </div>
+  );
+};
 
-  )
-}
-
-export default Home
+export default Home;
