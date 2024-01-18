@@ -1,33 +1,30 @@
 // src/components/CreatePost.js
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useDispatch } from 'react-redux';
-import { fetchPosts } from '../features/post/postSlice';
 import supabase from '../config/supabse'; // Import the Supabase client
 
+
+  
 const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
-  const createPostMutation = useMutation(
-    {
-       mutationFn: async () => {
-            const { data, error } = await supabase.from('posts').insert([{ title, content, likes: 0 }]);
-            if (error) {
-              throw new Error('Error creating post');
-            }
-            return data;
-          },
-      onSuccess: () => {
-        // Refetch posts after successful creation
-        queryClient.invalidateQueries('posts');
-        dispatch(fetchPosts()); // Optionally, you can dispatch the RTK action as well
-      },
+
+  const createPost = async () => {
+    const { data, error } = await supabase.from('posts').insert([{ title, content, likes: 0 }]);
+    if (error) {
+      throw new Error('Error creating post');
     }
-  );
+    return data;
+  };
+
+  const createPostMutation = useMutation({
+    mutationFn: createPost,
+    onSuccess: () => {
+      queryClient.invalidateQueries('posts');
+    },
+  });
 
   const handleCreatePost = () => {
     createPostMutation.mutate();
