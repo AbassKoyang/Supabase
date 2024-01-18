@@ -25,7 +25,7 @@ const deletePost = async (postId) => {
 };
 
 const likePost = async (post) => {
-  const { data, error } = await supabase.from('postshh').update({ likes: post.likes + 1 }).eq('id', post.id);
+  const { data, error } = await supabase.from('posts').update({ likes: post.likes + 1 }).eq('id', post.id);
   if (error) {
     throw new Error('Error liking post');
   }
@@ -91,23 +91,30 @@ const Home = () => {
   
     return (
       <div>
-        {isLoading && <p>Loading...</p>}
-        {isError && <p>Error fetching posts</p>}
-        {posts &&
-          posts.map((post) => (
-            <div key={post.id}>
-              <h2>{post.title}</h2>
-              <p>{post.content}</p>
-              <p>Likes: {post.likes}</p>
-              <button onClick={() => handleLike(post)}>Like</button>
-              <button onClick={() => updatePostMutation.mutate({ ...post, content: 'Updated Content' })}>
-                Update
-              </button>
-              <button onClick={() => handleDelete(post.id)}>Delete</button>
-            </div>
-          ))}
-      </div>
-    );
-  };
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : (
+            isError ? (
+              <p>Error fetching posts</p>
+            ) : (
+              posts ? (
+                posts.map((post) => (
+                  <div key={post.id}>
+                    <h2>{post.title}</h2>
+                    <p>{post.content}</p>
+                    <p>Likes: {post.likes}</p>
+                    <button onClick={() => handleLike(post)}>Like</button>
+                    <button onClick={() => updatePostMutation.mutate({ ...post, content: 'Updated Content' })}>
+                      Update
+                    </button>
+                    <button onClick={() => handleDelete(post.id)}>Delete</button>
+                  </div>
+                ))
+              ) : null
+            )
+          )}
+        </div>
+  );
+};
 
 export default Home;
