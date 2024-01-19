@@ -58,7 +58,7 @@ const Update = () => {
             setUpdateError("Failed to update the Post");
         },
         onSuccess: () => {
-          queryClient.invalidateQueries('posts');
+          queryClient.invalidateQueries({queryKey: ['posts']});
         },
       });
 
@@ -73,7 +73,7 @@ const Update = () => {
         handleUpdatePostMutation() 
                 setTimeout(() => {
             navigate('/')
-        }, 3000);
+        }, 1000);
       }
     
       const deletePostMutation = useMutation({
@@ -85,6 +85,9 @@ const Update = () => {
 
       const handleDelete = (postId) => {
         deletePostMutation.mutate(postId);
+        setTimeout(() => {
+            navigate('/')
+        }, 1000);
        };
     const isTrue = postTitle && postContent;
     
@@ -103,7 +106,7 @@ const Update = () => {
                                 <textarea value={postContent} name="content" type="text" rows='10' onChange={(e) => setPostContent(e.target.value)}></textarea>
                             </label>
                             <button className="update-button button" type="button" disabled={!isTrue} onClick={handleSubmit}>{updatePostMutation.isPending ? <p>Updating Post...</p> : <p>Update Post</p>}</button>
-                            <button className="delete-button button" type="button" onClick={() => handleDelete(postId)}>{deletePostMutation.isPending ? <p>Deleting Post...</p> : <p>Delete</p>}</button>
+                            <button className="delete-button button" type="button" onClick={() => handleDelete(post.id)}>{deletePostMutation.isPending ? <p>Deleting Post...</p> : <p>Delete</p>}</button>
                         </form>
             ) : null
         }

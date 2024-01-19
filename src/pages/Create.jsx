@@ -33,7 +33,7 @@ const CreatePost = () => {
     createPostMutation.mutate();
    setTimeout(() => {
     navigate('/')
-   }, 3000);
+   }, 1000);
   };
 
   return (
