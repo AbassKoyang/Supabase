@@ -28,6 +28,9 @@ const Update = () => {
             setUpdateError('Failed to update post, please try again.')
             throw new Error('Error updating post');
         }
+        if(!error){
+            setUpdateError(null)
+        }
         return data;
       };
       
@@ -63,8 +66,9 @@ const Update = () => {
         const existingPost = post;
         const updatedPost = {...existingPost, title: postTitle, content: postContent }
         updatePostMutation.mutate(updatedPost)
-        console.log(updatedPost)
-        // navigate('/')
+        setTimeout(() => {
+            navigate('/')
+        }, 2000);
       }
 
       const handleSubmit = (e) => {
