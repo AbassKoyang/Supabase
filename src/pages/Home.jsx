@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import supabase from "../config/supabse";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { RiEdit2Line, RiHeartFill, RiHeartLine } from "react-icons/ri";
 
 const fetchPosts = async () => {
   const { data, error } = await supabase.from('posts').select('*').order('id', { ascending: false });
@@ -154,7 +155,7 @@ const Home = () => {
   
   
     return (
-      <div>
+      <div className="post-section">
           {isLoading ? (
             <p>Loading...</p>
           ) : (
@@ -162,18 +163,23 @@ const Home = () => {
               <p>Error fetching posts</p>
             ) : (
               updatedPost.length > 1 ? (
-                updatedPost.map((post) => (
-                  <div key={post.id}>
+                <div className="post-list">
+                  {updatedPost.map((post) => (
+                  <article key={post.id}>
                     <h2>{post.title}</h2>
                     <p>{post.content}</p>
-                    <p>Likes: {post.likes}</p>
-                    <button onClick={() => handleLike(post)}>
-                      {post.isLiked ? 'Unlike' : 'Like'}
-                    </button>
-                    <span>{post.isLiked ? 'Liked!' : 'Not Liked'}</span>
-                    <Link to={`update/${post.id}`}>Edit</Link>
-                  </div>
-                ))
+                    <div className="article-action-con">
+                      <div className="like-con">
+                        <button className="like-button" onClick={() => handleLike(post)}>
+                          {post.isLiked ? <RiHeartFill className="like-icon" /> : <RiHeartLine className="like-icon" />}
+                        </button>
+                        <small>Likes: {post.likes}</small>
+                      </div>
+                      <Link to={`update/${post.id}`}><RiEdit2Line className='edit-icon' /></Link>
+                    </div>
+                  </article>
+                ))}
+                </div>
               ) : null
             )
           )}

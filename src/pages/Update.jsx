@@ -9,8 +9,8 @@ const Update = () => {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const postId = useParams();
-    const [postTitle, setPostTitle] = useState(null);
-    const [postContent, setPostContent] = useState(null);
+    const [postTitle, setPostTitle] = useState('');
+    const [postContent, setPostContent] = useState('');
     const [updateError, setUpdateError] = useState(null);
 
     const { data: post, isLoading, isError, error } = useQuery({queryKey: ['post'], queryFn: async () => {
