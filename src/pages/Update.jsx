@@ -66,14 +66,14 @@ const Update = () => {
         const existingPost = post;
         const updatedPost = {...existingPost, title: postTitle, content: postContent }
         updatePostMutation.mutate(updatedPost)
-        setTimeout(() => {
-            navigate('/')
-        }, 2000);
       }
 
       const handleSubmit = (e) => {
         e.preventDefault() ;
         handleUpdatePostMutation() 
+                setTimeout(() => {
+            navigate('/')
+        }, 3000);
       }
     
       const deletePostMutation = useMutation({
@@ -89,11 +89,11 @@ const Update = () => {
     const isTrue = postTitle && postContent;
     
   return (
-    <section className='update-page'>
+    <section className='form-con'>
         {isLoading ? (<p>Loading...</p>) :
             isError ? (<p>{error.message}</p>) :
                 post ? (
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} className="form">
                             <label htmlFor="title">
                                 <span>Title</span>
                                 <input name="title" value={postTitle} type="text" onChange={(e) => setPostTitle(e.target.value)} />
@@ -102,8 +102,8 @@ const Update = () => {
                                 <span>Content</span>
                                 <textarea value={postContent} name="content" type="text" rows='10' onChange={(e) => setPostContent(e.target.value)}></textarea>
                             </label>
-                            <button type="button" disabled={!isTrue} onClick={handleSubmit}>Update</button>
-                            <button onClick={() => handleDelete(postId.id)}>Delete</button>
+                            <button className="update-button button" type="button" disabled={!isTrue} onClick={handleSubmit}>{updatePostMutation.isPending ? <p>Updating Post...</p> : <p>Update Post</p>}</button>
+                            <button className="delete-button button" type="button" onClick={() => handleDelete(postId)}>{deletePostMutation.isPending ? <p>Deleting Post...</p> : <p>Delete</p>}</button>
                         </form>
             ) : null
         }

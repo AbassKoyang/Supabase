@@ -126,3 +126,78 @@ article .article-action-con a .edit-icon{
   width: 18px;
   height: 18px;
 }
+
+/* Create page styles */
+.form-con{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.form{
+  width: 100%;
+  max-width: 700px;
+  border: 2px solid gray;
+  border-radius: 25px;
+  padding: 20px;
+}
+.form h2{
+  font-size: 25px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.form label{
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 15px;
+}
+.form label span{
+  font-size: 16px;
+  font-weight: 500;
+}
+.form label input,textarea{
+  width: 100%;
+  outline: none;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  padding: 9px;
+}
+.form .button{
+  background-color: rgb(216, 119, 216);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: .3s ease all;
+}
+.form .update-button{
+  width: 100%;
+  margin-bottom: 8px;
+}
+.form .delete-button{
+  width: 100%;
+  background-color: rgb(216, 54, 54);
+}
+.form .button:hover{
+  background-color: rgb(211, 58, 211);
+}
+.form .button:active{
+  background-color: rgb(211, 58, 211);
+}
+.form .button:focus{
+  background-color: rgb(211, 58, 211);
+}
+.form .delete-button:hover{
+  background-color: rgb(211, 15, 15);
+}
+.form .delete-button:active{
+  background-color: rgb(211, 15, 15);
+}
+.form .delete-button:focus{
+  background-color: rgb(211, 15, 15);
+}

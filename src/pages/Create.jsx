@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import supabase from '../config/supabse'; // Import the Supabase client
+import { useNavigate } from 'react-router-dom';
 
 
   
@@ -9,6 +10,7 @@ const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
 
   const createPost = async () => {
@@ -26,27 +28,33 @@ const CreatePost = () => {
     },
   });
 
-  const handleCreatePost = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     createPostMutation.mutate();
+   setTimeout(() => {
+    navigate('/')
+   }, 3000);
   };
 
   return (
-    <div>
+    <section className='form-con'>
+    <form onSubmit={handleSubmit} className='form'>
       <h2>Create a New Post</h2>
       <label>
-        Title:
+        <span>Title:</span>
         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
       </label>
       <br />
       <label>
-        Content:
+        <span>Content:</span>
         <textarea value={content} onChange={(e) => setContent(e.target.value)} />
       </label>
       <br />
-      <button onClick={handleCreatePost} disabled={createPostMutation.isLoading}>
-        Create Post
+      <button type='button' className='create-button button' onClick={handleSubmit} disabled={createPostMutation.isLoading}>
+        {createPostMutation.isPending ? <p>Creating Post...</p> : <p>Create Post</p>}
       </button>
-    </div>
+    </form>
+    </section>
   );
 };
 
