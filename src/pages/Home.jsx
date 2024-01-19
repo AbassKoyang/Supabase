@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import supabase from "../config/supabse";
+import { Link } from "react-router-dom";
 
 const fetchPosts = async () => {
   const { data, error } = await supabase.from('posts').select('*');
@@ -108,6 +109,7 @@ const Home = () => {
                       Update
                     </button>
                     <button onClick={() => handleDelete(post.id)}>Delete</button>
+                    <Link to={`update/${post.id}`}>Update</Link>
                   </div>
                 ))
               ) : null

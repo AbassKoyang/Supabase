@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom"
 import supabase from "../config/supabse";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -28,17 +28,22 @@ const updatePost = async (updatedPost) => {
 
 
 const Update = () => {
+
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const postId = useParams();
-    const { data: post, isLoading, isError } = useQuery({queryKey: ['post'], queryFn: async () => {
-        const { data, error } = await supabase.from('posts').select('id', postId);
+
+    const { data: post, isLoading, isError, error } = useQuery({queryKey: ['post'], queryFn: async () => {
+        const { data, error } = await supabase.from('posts').select().eq('id', postId.id);
         if (error) {
           throw new Error('Error fetching posts');
         }
-        return data}});
+        console.log(data)
+        return data}
+    });
 
-    const [postTitle, setPostTitle] = useState(post?.title);
-    const [postContent, setPostContent] = useState(post?.title);
+    const [postTitle, setPostTitle] = useState(post ? post[0].title : '');
+    const [postContent, setPostContent] = useState(post ? post[0].content : '');
     
     // useEffect(() => {
     //   if(post){
@@ -52,6 +57,13 @@ const Update = () => {
           queryClient.invalidateQueries('posts');
         },
       });
+
+      const handleUpdatePostMutation = () => {
+        const existingPost = post[0]
+        updatePostMutation.mutate({ ...existingPost, postTitle: postTitle, content: postContent })
+        console.log({ ...existingPost, title: postTitle, content: postContent })
+        // navigate('/')
+      }
     
       const deletePostMutation = useMutation({
         mutationFn:deletePost, 
@@ -67,18 +79,23 @@ const Update = () => {
     
   return (
     <section className='update-page'>
-        <form>
-            <label htmlFor="title">
-                <span>Title</span>
-                <input name="title" value={postTitle} type="text" onChange={(e) => setPostTitle(e.target.value)} />
-            </label>
-            <label htmlFor="content">
-                <span>Content</span>
-                <textarea value={postContent} name="content" type="text" rows='10' onChange={(e) => setPostContent(e.target.value)}></textarea>
-            </label>
-            <button disabled={!isTrue} onClick={() => updatePostMutation.mutate({ ...post, postTitle: postTitle, content: postContent })}>Update</button>
-            <button onClick={() => handleDelete(postId)}>Delete</button>
-        </form>
+        {isLoading ? (<p>Loading...</p>) :
+            isError ? (<p>{error.message}</p>) :
+                post ? (
+                        <form>
+                            <label htmlFor="title">
+                                <span>Title</span>
+                                <input name="title" value={postTitle} type="text" onChange={(e) => setPostTitle(e.target.value)} />
+                            </label>
+                            <label htmlFor="content">
+                                <span>Content</span>
+                                <textarea value={postContent} name="content" type="text" rows='10' onChange={(e) => setPostContent(e.target.value)}></textarea>
+                            </label>
+                            <button type="button" disabled={!isTrue} onClick={handleUpdatePostMutation}>Update</button>
+                            <button onClick={() => handleDelete(postId.id)}>Delete</button>
+                        </form>
+            ) : null
+        }
     </section>
   )
 }
