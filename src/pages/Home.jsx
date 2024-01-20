@@ -175,7 +175,10 @@ const Home = () => {
                         </button>
                         <small>Likes: {post.likes}</small>
                       </div>
+                      <div className="links-con">
                       <Link to={`update/${post.id}`}><RiEdit2Line className='edit-icon' /></Link>
+                      <Link to={`post/${post.id}`}>View</Link>
+                      </div>
                     </div>
                   </article>
                 ))}

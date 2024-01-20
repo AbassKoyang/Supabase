@@ -108,7 +108,12 @@ article .article-action-con .like-con .like-button:hover{
   /* filter: brightness(90%); */
   background: rgba(247, 166, 247, 0.959)
 }
-article .article-action-con a{
+article .article-action-con .links-con {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+article .article-action-con .links-con a{
   text-decoration: none;
   color: rgb(212, 89, 212);
   width: 18px;
