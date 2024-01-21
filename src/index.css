@@ -214,35 +214,47 @@ article .article-action-con a .edit-icon{
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgb(51, 50, 50);
   margin-top: 30px;
 }
 .single-post-page .single-post{
   width: 100%;
   max-width: 700px;
-  border-radius: 12px;
+  border-radius: 30px;
+  background-color: rgb(51, 50, 50);
+  padding: 30px;
 }
-.single-post h2{
+.single-post-page .single-post .title{
   font-size: 30px;
   font-weight: 700;
   color: white;
 }
-.single-post h2{
+.single-post-page .single-post .content{
   font-size: 16px;
   font-weight: 400;
   color: rgb(224, 220, 220);
   margin: 20px 0;
 }
-.single-post form{
+.single-post-page .single-post .likes{
+  font-size: 16px;
+  font-weight: 500;
+  color: rgb(211, 58, 211);
+}
+.single-post-page .single-post .comment-subtitle{
+  font-size: 24px;
+  font-weight: 600;
+  color: rgb(224, 220, 220);
+  margin: 10px 0;
+}
+.single-post-page .single-post .form{
   width: 100%;
   padding: 20px;
 }
-.single-post form textarea{
+.single-post-page .single-post .form .textarea{
   width: 100%;
   padding: 10px;
   border-radius: 8px;
 }
-.single-post form textarea button{
+.single-post-page .single-post .form .button{
   width: 100%;
   padding: 10px;
   border-radius: 8px;
@@ -250,4 +262,5 @@ article .article-action-con a .edit-icon{
   justify-content: center;
   align-items: center;
   background-color: rgb(211, 58, 211);
+  margin-top: 4px;
 }
