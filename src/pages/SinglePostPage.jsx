@@ -2,11 +2,16 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom'
 import supabase from '../config/supabse';
 import { useState } from 'react';
+import Comment from '../components/Comment';
 
 const SinglePostPage = () => {
     const query =  useQueryClient()
     const postId = useParams();
-    const [commentContent, setCommentContent] = useState('')
+    const [commentContent, setCommentContent] = useState('');
+    const [formType, setFormType] = useState('comment');
+    const [replyTo, setReplyTo] = useState(second)
+
+
     const fetchSinglePost = async () => {
         const {data, error} = await supabase.from('posts').select('*').eq('id', postId.id).single();
         if(!error){
@@ -22,7 +27,15 @@ const SinglePostPage = () => {
         const {data, error} = await supabase.from('users_comments').insert([{author: {username:'abasskoyang', email: 'abasskoyang12@gmail.com', user_id: 1}, commenter_id: 1, post_id: postId.id, parent_comment_id: null, comment_content: commentContent} ])
         if (error) {
             console.log(error)
-            throw new Error('Error creating post');
+            throw new Error('Error uploading comment');
+          }
+        return data;
+    }
+    const uploadReply = async (comment) => {
+        const {data, error} = await supabase.from('users_comments').insert([{author: {username:'abasskoyang', email: 'abasskoyang12@gmail.com', user_id: 1}, commenter_id: 1, post_id: postId.id, parent_comment_id: comment.id, comment_content: commentContent} ])
+        if (error) {
+            console.log(error)
+            throw new Error('Error uploading reply');
           }
         return data;
     }
@@ -33,18 +46,34 @@ const SinglePostPage = () => {
             console.log(error)
             throw new Error('Couldnt fetch comments');
         }
-        console.log(data);
-        return data;
+        
+        const comments = data.map((comment) => ({
+            ...comment,
+            replies: data.filter((reply) => reply.parent_comment_id === comment.id),
+        }));
+
+        const topLevelComments = comments.filter((comment) => !comment.parent_comment_id);
+
+        return topLevelComments;
     }
 
 
-    const {data:post, error, isLoading} = useQuery({queryKey: ['singlepost'], queryFn: fetchSinglePost})
-    const {data:comments, error:commentsError, isLoading:commentsIsLoading} = useQuery({queryKey: ['comments'], queryFn: fetchComments})
+
+    const {data:post, error, isLoading} = useQuery({queryKey: ['singlepost'], queryFn: fetchSinglePost});
+    const {data:comments, error:commentsError, isLoading:commentsIsLoading} = useQuery({queryKey: ['comments'], queryFn: fetchComments}); 
+
     const uploadCommentMutation = useMutation({
         mutationKey: ["uploadcomment"],
         mutationFn: uploadComment,
         onSuccess: ()=>{
-            query.invalidateQueries({queryKey: ['singlepost', 'comments']})
+            query.invalidateQueries({queryKey: ['singlepost']})
+        }
+    })
+    const uploadReplyMutation = useMutation({
+        mutationKey: ["uploadcomment"],
+        mutationFn: uploadReply,
+        onSuccess: ()=>{
+            query.invalidateQueries({queryKey: ['singlepost']})
         }
     })
 
@@ -53,7 +82,17 @@ const SinglePostPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         uploadCommentMutation.mutate();
+        setCommentContent('')
     };
+    const handleReplySubmit = (e, comment) => {
+        e.preventDefault();
+        uploadReplyMutation.mutate(comment);
+        setCommentContent('')
+    };
+    const handleReplyButtonClick = () => {
+        setFormType('reply')
+        window.scrollY = 300;
+    }
 
 
   return (
@@ -69,16 +108,23 @@ const SinglePostPage = () => {
             <h3 className='comment-subtitle'>Comments</h3>
             <form className='form' onSubmit={handleSubmit}>
                 <textarea className='textarea' value={commentContent} placeholder='Enter your comment' onChange={(e)=> setCommentContent(e.target.value)} name="commentbox" id="" cols="30" rows="15"></textarea>
-                <button className='button' type='button' onClick={handleSubmit}>{uploadCommentMutation.isPending ? 'Uploading comment' : 'Upload Comment'}</button>
+                {formType === 'comment' ? (
+                    <button className='button' type='button' onClick={handleSubmit}>
+                        {uploadCommentMutation.isPending ? 'Uploading comment...' : 'Upload Comment'}
+                    </button>
+                ) : (
+                    <button className='button' type='button' onClick={handleReplySubmit}>
+                        {uploadReplyMutation.isPending ? 'Uploading reply...' : 'Upload reply'}
+                    </button>
+                )}
             </form>
             <div>
+                {commentsIsLoading && <p>Loading comments...</p>}
+                {commentsError && <p>Error fetching comments</p>}
+                {comments.length < 1 && <p>Be the first to comment 😃</p>}
                 {comments && comments.map((comment) => {
                     return (
-                        <div key={comment.id}>
-                            <p>{comment.author.username}</p>
-                            <p>{comment.author.email}</p>
-                            <p>{comment.comment_content}</p>
-                        </div>
+                        <Comment key={comment.id} comment={comment} handleReplyButtonClick={handleReplyButtonClick} />
                     )
                 })}
             </div>

@@ -264,3 +264,42 @@ article .article-action-con a .edit-icon{
   background-color: rgb(211, 58, 211);
   margin-top: 4px;
 }
+.comments{
+  width: 100%;
+  padding: 10px;
+  background-color: rgb(31, 29, 29);
+  border: 2px solid gray;
+  border-radius: 12px;
+  margin-top: 12px;
+}
+.comments h3{
+  text-align: left;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+}
+.comments small{
+  text-align: left;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgb(224, 220, 220);
+}
+.comments p{
+  text-align: left;
+  font-size: 16px;
+  font-weight: 400;
+  color: white;
+  margin-top: 10px;
+}
+.comments p{
+  font-size: 12px;
+  font-weight: 400;
+  color: white;
+  margin-top: 10px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background-color: rgb(212, 89, 212);
+}
+.comments .replies{
+  margin-left: 30px;
+}
