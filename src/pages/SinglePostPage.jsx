@@ -8,8 +8,6 @@ const SinglePostPage = () => {
     const query =  useQueryClient()
     const postId = useParams();
     const [commentContent, setCommentContent] = useState('');
-    const [formType, setFormType] = useState('comment');
-    const [replyTo, setReplyTo] = useState(second)
 
 
     const fetchSinglePost = async () => {
@@ -28,14 +26,6 @@ const SinglePostPage = () => {
         if (error) {
             console.log(error)
             throw new Error('Error uploading comment');
-          }
-        return data;
-    }
-    const uploadReply = async (comment) => {
-        const {data, error} = await supabase.from('users_comments').insert([{author: {username:'abasskoyang', email: 'abasskoyang12@gmail.com', user_id: 1}, commenter_id: 1, post_id: postId.id, parent_comment_id: comment.id, comment_content: commentContent} ])
-        if (error) {
-            console.log(error)
-            throw new Error('Error uploading reply');
           }
         return data;
     }
@@ -69,14 +59,6 @@ const SinglePostPage = () => {
             query.invalidateQueries({queryKey: ['singlepost']})
         }
     })
-    const uploadReplyMutation = useMutation({
-        mutationKey: ["uploadcomment"],
-        mutationFn: uploadReply,
-        onSuccess: ()=>{
-            query.invalidateQueries({queryKey: ['singlepost']})
-        }
-    })
-
 
 
     const handleSubmit = (e) => {
@@ -84,15 +66,6 @@ const SinglePostPage = () => {
         uploadCommentMutation.mutate();
         setCommentContent('')
     };
-    const handleReplySubmit = (e, comment) => {
-        e.preventDefault();
-        uploadReplyMutation.mutate(comment);
-        setCommentContent('')
-    };
-    const handleReplyButtonClick = () => {
-        setFormType('reply')
-        window.scrollY = 300;
-    }
 
 
   return (
@@ -108,23 +81,17 @@ const SinglePostPage = () => {
             <h3 className='comment-subtitle'>Comments</h3>
             <form className='form' onSubmit={handleSubmit}>
                 <textarea className='textarea' value={commentContent} placeholder='Enter your comment' onChange={(e)=> setCommentContent(e.target.value)} name="commentbox" id="" cols="30" rows="15"></textarea>
-                {formType === 'comment' ? (
-                    <button className='button' type='button' onClick={handleSubmit}>
-                        {uploadCommentMutation.isPending ? 'Uploading comment...' : 'Upload Comment'}
-                    </button>
-                ) : (
-                    <button className='button' type='button' onClick={handleReplySubmit}>
-                        {uploadReplyMutation.isPending ? 'Uploading reply...' : 'Upload reply'}
-                    </button>
-                )}
+                <button className='button' type='button' onClick={handleSubmit}>
+                    {uploadCommentMutation.isPending ? 'Uploading comment...' : 'Upload Comment'}
+                </button>
             </form>
-            <div>
+            <div className='comment-section'>
                 {commentsIsLoading && <p>Loading comments...</p>}
                 {commentsError && <p>Error fetching comments</p>}
-                {comments.length < 1 && <p>Be the first to comment 😃</p>}
+                {comments && comments.length < 1 && <p>Be the first to comment 😃</p>}
                 {comments && comments.map((comment) => {
                     return (
-                        <Comment key={comment.id} comment={comment} handleReplyButtonClick={handleReplyButtonClick} />
+                        <Comment key={comment.id} comment={comment} postId={postId} />
                     )
                 })}
             </div>

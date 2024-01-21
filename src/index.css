@@ -291,14 +291,16 @@ article .article-action-con a .edit-icon{
   color: white;
   margin-top: 10px;
 }
-.comments p{
-  font-size: 12px;
+.comments button{
+  font-size: 10px;
   font-weight: 400;
   color: white;
   margin-top: 10px;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 12px;
   background-color: rgb(212, 89, 212);
+  margin-bottom: 10px;
+  cursor: pointer;
 }
 .comments .replies{
   margin-left: 30px;
