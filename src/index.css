@@ -206,3 +206,48 @@ article .article-action-con a .edit-icon{
 .form .delete-button:focus{
   background-color: rgb(211, 15, 15);
 }
+
+/* single post page */
+
+.single-post-page{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(51, 50, 50);
+  margin-top: 30px;
+}
+.single-post-page .single-post{
+  width: 100%;
+  max-width: 700px;
+  border-radius: 12px;
+}
+.single-post h2{
+  font-size: 30px;
+  font-weight: 700;
+  color: white;
+}
+.single-post h2{
+  font-size: 16px;
+  font-weight: 400;
+  color: rgb(224, 220, 220);
+  margin: 20px 0;
+}
+.single-post form{
+  width: 100%;
+  padding: 20px;
+}
+.single-post form textarea{
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+}
+.single-post form textarea button{
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(211, 58, 211);
+}
