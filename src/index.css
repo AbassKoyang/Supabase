@@ -264,6 +264,16 @@ article .article-action-con a .edit-icon{
   background-color: rgb(211, 58, 211);
   margin-top: 4px;
 }
+.single-post-page .single-post .comment-section{
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
 .comments{
   width: 100%;
   padding: 10px;

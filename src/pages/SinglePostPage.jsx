@@ -56,7 +56,7 @@ const SinglePostPage = () => {
         mutationKey: ["uploadcomment"],
         mutationFn: uploadComment,
         onSuccess: ()=>{
-            query.invalidateQueries({queryKey: ['singlepost']})
+            query.invalidateQueries({queryKey: ['comments']})
         }
     })
 
@@ -64,7 +64,6 @@ const SinglePostPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         uploadCommentMutation.mutate();
-        setCommentContent('')
     };
 
 
